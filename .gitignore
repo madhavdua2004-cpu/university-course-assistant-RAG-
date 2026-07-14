@@ -1,0 +1,9 @@
+.env
+.env.local
+node_modules/
+data/
+.agents/
+.codex/
+outputs/
+work/*
+!work/demo-server.js

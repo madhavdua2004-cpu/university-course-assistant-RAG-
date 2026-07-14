@@ -1,0 +1,26 @@
+{
+  "provider": "openrouter",
+  "defaultModel": "nvidia/nemotron-3-nano-30b-a3b:free",
+  "models": [
+    {
+      "id": "nvidia/nemotron-3-nano-30b-a3b:free",
+      "label": "NVIDIA Nemotron 3 Nano 30B Free"
+    },
+    {
+      "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "label": "NVIDIA Nemotron 3 Ultra 550B Free"
+    },
+    {
+      "id": "poolside/laguna-m.1:free",
+      "label": "Poolside Laguna M.1 Free"
+    },
+    {
+      "id": "openai/gpt-oss-20b:free",
+      "label": "OpenAI GPT OSS 20B Free"
+    },
+    {
+      "id": "google/gemma-4-31b-it:free",
+      "label": "Google Gemma 4 31B IT Free"
+    }
+  ]
+}

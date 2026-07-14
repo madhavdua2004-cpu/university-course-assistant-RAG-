@@ -1,0 +1,17 @@
+{
+  "name": "university-course-assistant",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node work/demo-server.js 5182"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.3",
+    "formidable": "^3.5.4",
+    "mammoth": "^1.9.1",
+    "officeparser": "^5.2.0",
+    "pdf-parse": "^1.1.1",
+    "pg": "^8.22.0",
+    "tesseract.js": "^6.0.1"
+  }
+}

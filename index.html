@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Assistant</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section class="auth-screen" id="auth-screen">
+      <div class="auth-hero">
+        <div class="brand">
+          <div class="brand-mark">CA</div>
+          <div>
+            <p class="brand-name">Course Assistant</p>
+            <p class="brand-subtitle">Citation-first study</p>
+          </div>
+        </div>
+        <h1>Study from your own notes with answers you can trust.</h1>
+        <p>
+          Upload course material, ask doubts, generate quizzes, revise flashcards, and keep every answer tied to a source.
+        </p>
+        <div class="auth-points">
+          <span>Private course files</span>
+          <span>Page and slide citations</span>
+          <span>Exam-ready revision tools</span>
+        </div>
+      </div>
+
+      <div class="auth-card">
+        <p class="eyebrow">Welcome back</p>
+        <h2>Sign in to continue</h2>
+        <p class="muted">Use Clerk authentication or continue with the local demo fallback.</p>
+
+        <div class="clerk-panel">
+          <div id="clerk-sign-in"></div>
+          <p class="auth-note" id="clerk-status">Loading Clerk sign in...</p>
+        </div>
+
+        <div class="divider"><span>local fallback</span></div>
+
+        <div class="social-grid">
+          <button class="social-button google" data-demo-login>
+            <span>G</span>
+            Use Google mail
+          </button>
+          <button class="social-button facebook" data-demo-login>
+            <span>f</span>
+            Use Facebook mail
+          </button>
+          <button class="social-button microsoft" data-demo-login>
+            <span>M</span>
+            Use Microsoft mail
+          </button>
+          <button class="social-button github" data-demo-login>
+            <span>GH</span>
+            Use GitHub mail
+          </button>
+        </div>
+
+        <div class="divider"><span>or sign in with email</span></div>
+
+        <form class="auth-form" id="auth-form">
+          <label>Select mail ID
+            <select id="auth-account">
+              <option value="student@example.com">student@example.com</option>
+              <option value="google.student@example.com">google.student@example.com</option>
+              <option value="facebook.student@example.com">facebook.student@example.com</option>
+              <option value="microsoft.student@example.com">microsoft.student@example.com</option>
+              <option value="github.student@example.com">github.student@example.com</option>
+              <option value="custom">Use another email</option>
+            </select>
+          </label>
+          <label>Email
+            <input id="auth-email" type="email" value="student@example.com" autocomplete="email" />
+          </label>
+          <label>Password
+            <span class="password-field">
+              <input id="auth-password" type="password" value="student123" autocomplete="current-password" />
+              <button id="toggle-password" type="button">Show</button>
+            </span>
+          </label>
+          <button class="primary-action" type="submit">Sign In</button>
+          <button class="ghost-button" id="signup-button" type="button">Create Account</button>
+        </form>
+
+        <p class="auth-error" id="auth-error"></p>
+        <p class="auth-note">Demo credentials: student@example.com / student123</p>
+      </div>
+    </section>
+
+    <section class="account-chooser is-hidden" id="account-chooser" aria-label="Choose an account">
+      <div class="account-dialog">
+        <header class="account-dialog-header">
+          <div class="provider-mark" id="chooser-provider-mark">G</div>
+          <strong id="chooser-title">Sign in with Google</strong>
+          <button id="chooser-close" type="button" aria-label="Close account chooser">x</button>
+        </header>
+        <div class="account-dialog-body">
+          <div class="account-copy">
+            <div class="brand-mark mini">CA</div>
+            <h2>Choose an account</h2>
+            <p>to continue to Course Assistant</p>
+          </div>
+          <div class="account-list" id="account-list">
+            <button class="account-option" data-account-email="madhav16082004@gmail.com" data-account-name="Madhav Dua">
+              <span class="account-avatar">M</span>
+              <span><strong>Madhav Dua</strong><em>madhav16082004@gmail.com</em></span>
+            </button>
+            <button class="account-option" data-account-email="madhavdua2004@gmail.com" data-account-name="madhav Dua">
+              <span class="account-avatar teal">m</span>
+              <span><strong>madhav Dua</strong><em>madhavdua2004@gmail.com</em></span>
+            </button>
+            <button class="account-option" data-account-email="geetadua15@gmail.com" data-account-name="Madhav Dua">
+              <span class="account-avatar light">M</span>
+              <span><strong>Madhav Dua</strong><em>geetadua15@gmail.com</em></span>
+            </button>
+            <button class="account-option" data-account-email="mananrao80@gmail.com" data-account-name="Manan Yadav">
+              <span class="account-avatar purple">M</span>
+              <span><strong>Manan Yadav</strong><em>mananrao80@gmail.com</em></span>
+            </button>
+            <button class="account-option" data-account-email="madhavdua644@gmail.com" data-account-name="Madhav Dua Vlogs">
+              <span class="account-avatar image">MV</span>
+              <span><strong>Madhav Dua Vlogs</strong><em>madhavdua644@gmail.com</em></span>
+            </button>
+            <button class="account-option use-another" id="use-another-account" type="button">
+              <span class="account-avatar outline">@</span>
+              <span><strong>Use another account</strong><em>Enter a different email on the sign-in page</em></span>
+            </button>
+          </div>
+        </div>
+        <footer class="account-dialog-footer">
+          Before using this app, you can review Course Assistant's <a href="#" aria-label="Privacy Policy">Privacy Policy</a> and <a href="#" aria-label="Terms of Service">Terms of Service</a>.
+        </footer>
+      </div>
+    </section>
+
+    <div class="app-shell is-hidden" id="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <div class="brand">
+          <div class="brand-mark">CA</div>
+          <div>
+            <p class="brand-name">Course Assistant</p>
+            <p class="brand-subtitle">Citation-first study</p>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-item active" data-view="dashboard">Dashboard</button>
+          <button class="nav-item" data-view="onboarding">Setup</button>
+          <button class="nav-item" data-view="courses">Courses</button>
+          <button class="nav-item" data-view="assistant">Ask Assistant</button>
+          <button class="nav-item" data-view="uploads">Uploads</button>
+          <button class="nav-item" data-view="summaries">Summaries</button>
+          <button class="nav-item" data-view="quizzes">Quizzes</button>
+          <button class="nav-item" data-view="flashcards">Flashcards</button>
+          <button class="nav-item" data-view="assignments">Assignments</button>
+          <button class="nav-item" data-view="planner">Study Planner</button>
+          <button class="nav-item" data-view="papers">Previous Papers</button>
+          <button class="nav-item" data-view="progress">Progress</button>
+          <button class="nav-item" data-view="quality">RAG Quality</button>
+          <button class="nav-item" data-view="analytics">Analytics</button>
+          <button class="nav-item" data-view="settings">Settings</button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Current workspace</p>
+            <h1 id="view-title">Dashboard</h1>
+          </div>
+          <div class="topbar-actions">
+            <label class="select-label">
+              Course
+              <select id="course-select">
+                <option>DBMS</option>
+                <option>Operating Systems</option>
+                <option>DSA</option>
+                <option>Maths</option>
+                <option>All Courses</option>
+              </select>
+            </label>
+            <button class="primary-action" data-view-jump="uploads">Upload Material</button>
+            <button class="ghost-button" id="logout-button" type="button">Log out</button>
+          </div>
+        </header>
+
+        <div class="context-strip" aria-label="Current study context">
+          <div><span>Course</span><strong id="context-course">DBMS</strong></div>
+          <div><span>Unit</span><strong id="context-unit">Unit 2: Normalization</strong></div>
+          <div><span>Exam</span><strong id="context-exam">14 days left</strong></div>
+          <div><span>Weak focus</span><strong id="context-weak">Dependencies, 3NF</strong></div>
+        </div>
+
+        <section class="view active" id="dashboard">
+          <div class="hero-band">
+            <div>
+              <p class="eyebrow">Good evening</p>
+              <h2 id="dashboard-hero-title">Keep DBMS revision moving with cited answers and focused practice.</h2>
+              <p class="muted" id="dashboard-next-task">Next best task: revise normalization, then take a 10 question Unit 2 quiz.</p>
+            </div>
+            <button class="primary-action" data-view-jump="assistant">Ask a Doubt</button>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric">
+              <span>Courses</span>
+              <strong>4</strong>
+              <p>2 active this week</p>
+            </article>
+            <article class="metric">
+              <span>Uploaded files</span>
+              <strong>28</strong>
+              <p>25 ready for search</p>
+            </article>
+            <article class="metric">
+              <span>Quiz average</span>
+              <strong id="quiz-average">76%</strong>
+              <p id="quiz-note">DBMS needs attention</p>
+            </article>
+            <article class="metric">
+              <span>Exam countdown</span>
+              <strong id="exam-countdown">14d</strong>
+              <p id="exam-note">DBMS final exam</p>
+            </article>
+          </div>
+
+          <section class="panel learning-graph-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Learning duration</p>
+                <h3>Average Course Learned Over Time</h3>
+              </div>
+              <span class="status ready">12.4 hrs/week avg</span>
+            </div>
+            <div class="learning-graph">
+              <div class="graph-bars" aria-label="Average learning hours by course">
+                <div class="graph-bar" style="--bar-height: 72%">
+                  <span></span>
+                  <strong>DBMS</strong>
+                  <em>18h</em>
+                </div>
+                <div class="graph-bar" style="--bar-height: 56%">
+                  <span></span>
+                  <strong>OS</strong>
+                  <em>14h</em>
+                </div>
+                <div class="graph-bar" style="--bar-height: 64%">
+                  <span></span>
+                  <strong>DSA</strong>
+                  <em>16h</em>
+                </div>
+                <div class="graph-bar" style="--bar-height: 40%">
+                  <span></span>
+                  <strong>Maths</strong>
+                  <em>10h</em>
+                </div>
+              </div>
+              <div class="graph-summary">
+                <div><span>Total study time</span><strong>58h</strong></div>
+                <div><span>Best focus</span><strong id="best-focus">DBMS</strong></div>
+                <div><span>Needs time</span><strong id="needs-time">Maths</strong></div>
+              </div>
+            </div>
+          </section>
+
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Today&apos;s Study Plan</h3>
+                <button class="ghost-button" data-view-jump="planner">Open planner</button>
+              </div>
+              <div class="task-list" id="study-plan-list">
+                <label><input type="checkbox" checked /> Read DBMS Unit 2 summary</label>
+                <label><input type="checkbox" /> Practice normalization MCQs</label>
+                <label><input type="checkbox" /> Review difficult flashcards</label>
+                <label><input type="checkbox" /> Analyze 2024 DBMS paper questions</label>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Weak Topics</h3>
+                <button class="ghost-button" data-view-jump="progress">View all</button>
+              </div>
+              <div class="topic-list" id="weak-topic-list">
+                <span>Normalization</span>
+                <span>Deadlocks</span>
+                <span>Recursion trees</span>
+                <span>Eigen values</span>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="onboarding">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">First-time setup</p>
+              <h2>Prepare your study workspace</h2>
+            </div>
+            <button class="primary-action" data-view-jump="uploads">Start Uploading</button>
+          </div>
+
+          <div class="setup-grid">
+            <article class="step-card complete">
+              <span>1</span>
+              <h3>Create your first course</h3>
+              <p>DBMS, Operating Systems, DSA, Maths, or any subject you study.</p>
+            </article>
+            <article class="step-card active-step">
+              <span>2</span>
+              <h3>Upload syllabus and notes</h3>
+              <p>Add PDFs, slides, Word files, assignments, textbooks, and past papers.</p>
+            </article>
+            <article class="step-card">
+              <span>3</span>
+              <h3>Set exam context</h3>
+              <p>Add exam date, weak topics, available hours, and revision preference.</p>
+            </article>
+            <article class="step-card">
+              <span>4</span>
+              <h3>Ask with citations</h3>
+              <p>Every answer should show file name, page or slide, and course source.</p>
+            </article>
+          </div>
+
+          <div class="tool-grid">
+            <section class="panel">
+              <h3>Create Course</h3>
+              <label>Course name <input value="Database Management Systems" /></label>
+              <label>Course code <input value="CS301" /></label>
+              <label>Exam date <input type="date" /></label>
+              <button class="primary-action" data-view-jump="courses">Save Course</button>
+            </section>
+            <section class="panel">
+              <h3>Weak Topics</h3>
+              <div class="topic-list">
+                <span>Normalization</span>
+                <span>Transactions</span>
+                <span>SQL joins</span>
+                <span>Indexing</span>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="courses">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Organize by subject</p>
+              <h2>Courses</h2>
+            </div>
+            <button class="primary-action">Create Course</button>
+          </div>
+          <div class="course-grid">
+            <article class="course-card">
+              <span class="course-code">CS301</span>
+              <h3>DBMS</h3>
+              <p>12 files, 68% complete, exam in 14 days</p>
+              <div class="progress-bar"><span style="width: 68%"></span></div>
+              <div class="card-actions">
+                <button data-view-jump="assistant">Ask</button>
+                <button data-view-jump="uploads">Upload</button>
+              </div>
+            </article>
+            <article class="course-card">
+              <span class="course-code">CS302</span>
+              <h3>Operating Systems</h3>
+              <p>8 files, 54% complete, exam in 20 days</p>
+              <div class="progress-bar"><span style="width: 54%"></span></div>
+              <div class="card-actions">
+                <button data-view-jump="assistant">Ask</button>
+                <button data-view-jump="uploads">Upload</button>
+              </div>
+            </article>
+            <article class="course-card">
+              <span class="course-code">CS201</span>
+              <h3>DSA</h3>
+              <p>5 files, 72% complete, exam in 23 days</p>
+              <div class="progress-bar"><span style="width: 72%"></span></div>
+              <div class="card-actions">
+                <button data-view-jump="assistant">Ask</button>
+                <button data-view-jump="uploads">Upload</button>
+              </div>
+            </article>
+          </div>
+
+          <section class="course-detail panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Course workspace</p>
+                <h3>DBMS</h3>
+              </div>
+              <button class="ghost-button" data-view-jump="assistant">Ask from DBMS</button>
+            </div>
+            <div class="tab-row" role="tablist" aria-label="Course sections">
+              <button class="active">Overview</button>
+              <button>Materials</button>
+              <button>Summaries</button>
+              <button>Quizzes</button>
+              <button>Flashcards</button>
+              <button>Progress</button>
+            </div>
+            <div class="course-workspace">
+              <div>
+                <h4>Important Units</h4>
+                <div class="topic-list">
+                  <span>Unit 2: Normalization</span>
+                  <span>Unit 4: Transactions</span>
+                  <span>SQL joins</span>
+                  <span>Indexes</span>
+                </div>
+              </div>
+              <div>
+                <h4>Materials</h4>
+                <div class="material-table">
+                  <div><strong>DBMS Unit 2.pdf</strong><span>42 pages</span><span class="status ready">Ready</span></div>
+                  <div><strong>Lecture 5.pptx</strong><span>21 slides</span><span class="status ready">Ready</span></div>
+                  <div><strong>2024 Paper.pdf</strong><span>6 pages</span><span class="status ready">Ready</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="assistant">
+          <div class="assistant-layout">
+            <aside class="filters panel">
+              <h3>Answer Setup</h3>
+              <label>Scope
+                <select>
+                  <option>Current course</option>
+                  <option>All courses</option>
+                  <option>Selected files</option>
+                </select>
+              </label>
+              <label>Mode
+                <select>
+                  <option>Simple explanation</option>
+                  <option>Exam answer</option>
+                  <option>Short notes</option>
+                  <option>Step-by-step</option>
+                  <option>Interview style</option>
+                  <option>Last-minute revision</option>
+                </select>
+              </label>
+              <label>Retrieval
+                <select>
+                  <option>Hybrid search + re-rank</option>
+                  <option>Embeddings only</option>
+                  <option>Keyword only</option>
+                </select>
+              </label>
+              <label>Language
+                <select>
+                  <option>Auto</option>
+                  <option>English</option>
+                  <option>Hinglish</option>
+                </select>
+              </label>
+              <label class="toggle-row"><input type="checkbox" checked /> Remember follow-up context</label>
+              <label class="toggle-row"><input type="checkbox" checked /> Include diagrams/images</label>
+            </aside>
+
+            <section class="chat-panel panel">
+              <div class="message student">Explain normalization from DBMS notes.</div>
+              <div class="message assistant">
+                <div class="answer-meta">
+                  <span class="confidence high">High confidence</span>
+                  <span>3 sources matched</span>
+                  <span>Re-ranked result #1</span>
+                </div>
+                <p><strong>Normalization</strong> is a process of organizing database tables to reduce repeated data and improve data integrity.</p>
+                <ul>
+                  <li>1NF removes repeating groups.</li>
+                  <li>2NF removes partial dependency.</li>
+                  <li>3NF removes transitive dependency.</li>
+                </ul>
+                <div class="citations">
+                  <button>DBMS Unit 2.pdf - page 14</button>
+                  <button>DBMS Lecture 5.pptx - slide 8</button>
+                  <button>Past Paper 2024.pdf - Q4</button>
+                </div>
+                <div class="answer-actions">
+                  <button data-simple-explain>Explain like I&apos;m confused</button>
+                  <button data-feedback="up">Thumbs up</button>
+                  <button data-feedback="down">Thumbs down</button>
+                </div>
+              </div>
+              <div class="message assistant simple-explain is-hidden" id="simple-explain">
+                <p><strong>Simpler version:</strong> Normalization means splitting messy tables into cleaner smaller tables so the same data is not repeated again and again.</p>
+                <div class="citations"><button>DBMS Unit 2.pdf - page 14</button></div>
+              </div>
+              <div class="not-found">
+                If confidence is low, the assistant says: "I&apos;m not sure based on your course material. I couldn&apos;t find enough support in the uploaded sources."
+              </div>
+              <form class="chat-input" id="rag-form">
+                <input aria-label="Ask a question" id="rag-question" placeholder="Ask from your course material..." />
+                <button type="submit">Send</button>
+              </form>
+            </section>
+
+            <aside class="source-panel panel">
+              <h3>Source Preview</h3>
+              <p class="source-title">DBMS Unit 2.pdf</p>
+              <p class="muted">Page 14 - Normalization</p>
+              <blockquote>
+                <mark>Normalization</mark> is used to <mark>minimize redundancy</mark> and dependency in relational database design.
+              </blockquote>
+              <div class="source-stack">
+                <div><strong>Lecture slide</strong><span>Lecture 5.pptx - slide 8</span></div>
+                <div><strong>Textbook</strong><span>Chapter 6 - page 112</span></div>
+                <div><strong>Past paper</strong><span>2024 Paper - Q4</span></div>
+                <div><strong>Professor note</strong><span>Prof Notes.docx - section 2</span></div>
+                <div><strong>Diagram</strong><span>ERD_normalization.png - OCR matched</span></div>
+              </div>
+              <button class="ghost-button">Open document</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="uploads">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Add course material</p>
+              <h2>Uploads</h2>
+            </div>
+          </div>
+          <div class="upload-layout">
+            <div class="upload-zone">
+              <strong>Drop PDFs, PPTs, Word files, notes, diagrams, images, assignments, syllabus, or papers here</strong>
+              <p>Files are extracted, OCR-scanned if needed, chunked, indexed, and made searchable with page, slide, diagram, or question citations.</p>
+              <input type="file" id="course-files" multiple hidden accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,.bmp,.tif,.tiff" />
+              <button class="primary-action" id="choose-files" type="button">Choose Files</button>
+              <p class="upload-status" id="upload-status">No files selected yet.</p>
+            </div>
+            <section class="panel">
+              <h3>File Details</h3>
+              <label>Course
+                <select id="upload-course"><option>DBMS</option><option>Operating Systems</option><option>DSA</option><option>Maths</option></select>
+              </label>
+              <label>Material type
+                <select id="upload-material-type"><option>Lecture notes</option><option>Textbook</option><option>Professor notes</option><option>Syllabus</option><option>Assignment</option><option>Previous paper</option><option>Diagram/Image</option></select>
+              </label>
+              <label>Unit or chapter <input id="upload-unit" placeholder="Example: Unit 2" /></label>
+            </section>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Recent Uploads</h3>
+              <span class="status ready">25 ready</span>
+            </div>
+            <div class="processing-steps">
+              <span>Upload</span>
+              <span>Extract text/OCR</span>
+              <span>Chunk + metadata</span>
+              <span>Embed + keyword index</span>
+              <span>Re-rank + cite</span>
+            </div>
+            <div id="uploaded-files">
+              <div class="file-row"><span>No uploaded files indexed yet</span><span class="status indexing">Waiting</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="summaries">
+          <div class="tool-grid">
+            <section class="panel">
+              <h2>Summarizer</h2>
+              <label>Material
+                <select id="summary-material"><option>Current course material</option><option>DBMS Unit 2.pdf</option><option>Lecture 5 slides</option></select>
+              </label>
+              <label>Format
+                <select id="summary-format"><option>10 bullet points</option><option>Short notes</option><option>Exam revision</option></select>
+              </label>
+              <button class="primary-action" id="generate-summary" type="button">Generate Summary</button>
+            </section>
+            <section class="panel" id="summary-preview">
+              <h3>Preview</h3>
+              <ol>
+                <li>Normalization reduces redundancy.</li>
+                <li>Functional dependency helps identify table design issues.</li>
+                <li>3NF is important for exam answers.</li>
+              </ol>
+              <div class="citations"><button>DBMS Unit 2.pdf - page 14</button></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="quizzes">
+          <div class="tool-grid">
+            <section class="panel">
+              <h2>Quiz Generator</h2>
+              <label>Question type
+                <select id="quiz-type"><option>MCQ</option><option>Short answer</option><option>Long answer</option><option>Viva</option></select>
+              </label>
+              <label>Difficulty
+                <select id="quiz-difficulty"><option>Medium</option><option>Easy</option><option>Hard</option><option>Exam-focused</option></select>
+              </label>
+              <button class="primary-action" id="create-ai-quiz" type="button">Create Quiz</button>
+              <button class="ghost-button" id="generate-quiz-flashcards" type="button">Auto-generate flashcards</button>
+            </section>
+            <section class="quiz-card panel">
+              <p class="eyebrow" id="quiz-progress">Question 1 of 10</p>
+              <h3 id="quiz-question">Which normal form removes partial dependency?</h3>
+              <div id="quiz-options" class="quiz-options">
+                <label><input type="radio" name="quiz-option" /> 1NF</label>
+                <label><input type="radio" name="quiz-option" /> 2NF</label>
+                <label><input type="radio" name="quiz-option" /> 3NF</label>
+              </div>
+              <div class="quiz-actions">
+                <button class="ghost-button" id="show-quiz-explanation" type="button">Show explanation</button>
+                <button class="primary-action" id="next-quiz-question" type="button">Next question</button>
+              </div>
+              <button class="primary-action is-hidden" id="submit-quiz" type="button">Submit quiz</button>
+              <div class="quiz-score is-hidden" id="quiz-score" aria-live="polite"></div>
+              <div class="quiz-explanation is-hidden" id="quiz-explanation" aria-live="polite"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="flashcards">
+          <div class="flashcard-wrap">
+            <section class="flashcard" id="flashcard-card">
+              <p class="eyebrow" id="flashcard-topic">DBMS - Normalization</p>
+              <h2 id="flashcard-question">What is 3NF?</h2>
+              <p id="flashcard-answer">Tap or review to see the answer, then mark your confidence.</p>
+            </section>
+            <div class="flash-actions">
+              <button id="flash-known" type="button">Known</button>
+              <button id="flash-review" type="button">Needs Review</button>
+              <button id="flash-difficult" type="button">Difficult</button>
+              <button id="flash-next" type="button">Next card</button>
+              <button id="flash-generate" type="button">Generate 50 with AI</button>
+            </div>
+            <div class="quiz-explanation is-hidden" id="flashcard-feedback" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section class="view" id="assignments">
+          <div class="panel wide-panel">
+            <h2>Assignment Helper</h2>
+            <p class="muted">Understand questions, create outlines, find references, and review drafts without promoting plagiarism.</p>
+            <textarea placeholder="Paste your assignment question here..."></textarea>
+            <div class="button-row">
+              <button class="primary-action">Explain Question</button>
+              <button class="ghost-button">Create Outline</button>
+              <button class="ghost-button">Find References</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="planner">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Exam focused</p>
+              <h2>Study Planner</h2>
+            </div>
+            <button class="primary-action" id="regenerate-plan" type="button">Regenerate Plan</button>
+          </div>
+          <div class="planner-grid" id="planner-grid">
+            <article class="day-card"><strong>Day 1</strong><p>Normalization summary + MCQs</p></article>
+            <article class="day-card"><strong>Day 2</strong><p>Transactions and schedules</p></article>
+            <article class="day-card"><strong>Day 3</strong><p>Previous paper practice</p></article>
+            <article class="day-card"><strong>Day 4</strong><p>Flashcards and weak topics</p></article>
+          </div>
+          <section class="panel planner-inputs">
+            <h3>Plan Inputs</h3>
+            <div class="info-grid">
+              <div><span>Syllabus detected</span><strong>5 units</strong></div>
+              <div><span>Upcoming deadline</span><strong>Assignment in 6 days</strong></div>
+              <div><span>Available time</span><strong>2h/day</strong></div>
+              <div><span>Weakest topic</span><strong>Normalization</strong></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="papers">
+          <div class="panel wide-panel">
+            <h2>Previous Question Paper Analyzer</h2>
+            <p class="muted">Upload past papers to detect repeated topics, unit weightage, marks patterns, and important questions.</p>
+            <div class="paper-results">
+              <div><strong>Most repeated</strong><span>Normalization, SQL joins, transactions</span></div>
+              <div><strong>High weightage</strong><span>Unit 2 and Unit 4</span></div>
+              <div><strong>Pattern</strong><span>2 long answers, 4 short notes, 10 MCQs</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="progress">
+          <div class="metric-grid">
+            <article class="metric"><span>DBMS progress</span><strong>68%</strong><p>8 of 12 topics complete</p></article>
+            <article class="metric"><span>Flashcards mastered</span><strong>142</strong><p>28 need review</p></article>
+            <article class="metric"><span>Weak topics</span><strong>4</strong><p>Based on quizzes and doubts</p></article>
+            <article class="metric"><span>Planner completion</span><strong>61%</strong><p>This week</p></article>
+          </div>
+          <section class="panel">
+            <h3>Recommended Fixes</h3>
+            <div class="file-row"><span>Normalization</span><button data-view-jump="summaries">Revise</button></div>
+            <div class="file-row"><span>Deadlocks</span><button data-view-jump="quizzes">Practice</button></div>
+          </section>
+        </section>
+
+        <section class="view" id="quality">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Technical rigor</p>
+              <h2>RAG Quality Pipeline</h2>
+            </div>
+            <span class="status ready">Reviewer mode</span>
+          </div>
+
+          <div class="pipeline-grid">
+            <article class="pipeline-step"><span>1</span><h3>Multi-source retrieval</h3><p>Lecture slides, textbooks, papers, professor notes, images, and diagrams.</p></article>
+            <article class="pipeline-step"><span>2</span><h3>Hybrid search</h3><p>Keyword BM25-style matching plus semantic embeddings for better recall.</p></article>
+            <article class="pipeline-step"><span>3</span><h3>Re-ranking</h3><p>Top chunks are re-scored so the best source appears first.</p></article>
+            <article class="pipeline-step"><span>4</span><h3>Answer guardrails</h3><p>Confidence threshold triggers "I&apos;m not sure" instead of hallucination.</p></article>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric"><span>Retrieval precision</span><strong>0.86</strong><p>Relevant chunks in top results</p></article>
+            <article class="metric"><span>Retrieval recall</span><strong>0.78</strong><p>Expected sources recovered</p></article>
+            <article class="metric"><span>Answer relevance</span><strong>0.91</strong><p>Rubric-based evaluator</p></article>
+            <article class="metric"><span>Citation coverage</span><strong>96%</strong><p>Answers with visible sources</p></article>
+          </div>
+
+          <section class="panel">
+            <h3>Evaluation Set</h3>
+            <div class="quality-table">
+              <div><strong>Question</strong><strong>Expected source</strong><strong>Status</strong></div>
+              <div><span>Explain 3NF</span><span>DBMS Unit 2 p14</span><span class="status ready">Pass</span></div>
+              <div><span>Deadlock prevention</span><span>OS Lecture 7 slide 12</span><span class="status ready">Pass</span></div>
+              <div><span>Eigen values formula</span><span>Maths Notes p22</span><span class="status indexing">Needs review</span></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="analytics">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Learning analytics</p>
+              <h2>Questions and Weak Topics</h2>
+            </div>
+          </div>
+          <div class="tool-grid">
+            <section class="panel">
+              <h3>Most-Asked Questions</h3>
+              <div class="rank-list">
+                <div><strong>1</strong><span>Explain normalization in simple words</span><em>24 asks</em></div>
+                <div><strong>2</strong><span>Difference between 2NF and 3NF</span><em>18 asks</em></div>
+                <div><strong>3</strong><span>Deadlock prevention vs avoidance</span><em>15 asks</em></div>
+                <div><strong>4</strong><span>How to write exam answers for SQL joins</span><em>11 asks</em></div>
+              </div>
+            </section>
+            <section class="panel">
+              <h3>Weak Topic Signals</h3>
+              <div class="weak-topic-bars">
+                <div><span>Normalization</span><strong style="width: 86%"></strong><em>High</em></div>
+                <div><span>Deadlocks</span><strong style="width: 72%"></strong><em>Medium</em></div>
+                <div><span>Recursion trees</span><strong style="width: 64%"></strong><em>Medium</em></div>
+                <div><span>Eigen values</span><strong style="width: 48%"></strong><em>Low</em></div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="settings">
+          <div class="panel wide-panel">
+            <h2>Settings and Privacy</h2>
+            <div class="settings-list">
+              <label>Language <select><option>Auto</option><option>English</option><option>Hinglish</option></select></label>
+              <label><input type="checkbox" checked /> Keep uploaded notes private to my account</label>
+              <label><input type="checkbox" checked /> Show citations before trusting answers</label>
+              <label><input type="checkbox" checked /> Warn me when an answer is not found in my material</label>
+              <label><input type="checkbox" /> Allow general knowledge answers after asking me first</label>
+              <button class="ghost-button">Download my data</button>
+              <button class="ghost-button">Clear chat history</button>
+              <button class="ghost-button">Delete uploaded files</button>
+              <button class="danger-button">Delete account</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav is-hidden" id="mobile-nav" aria-label="Mobile navigation">
+      <button class="nav-item active" data-view="dashboard">Home</button>
+      <button class="nav-item" data-view="courses">Courses</button>
+      <button class="nav-item" data-view="assistant">Notes</button>
+      <button class="nav-item" data-view="quizzes">Tools</button>
+      <button class="nav-item" data-view="settings">Profile</button>
+    </nav>
+
+    <button class="agent-launcher is-hidden" id="agent-launcher" aria-controls="agent-popup" aria-expanded="false">
+      AI
+    </button>
+
+    <aside class="agent-popup is-hidden" id="agent-popup" aria-label="General AI Agent">
+      <div class="agent-popup-header">
+        <div>
+          <p class="eyebrow">General AI</p>
+          <h2>Ask any topic</h2>
+        </div>
+        <div class="agent-header-actions">
+          <button class="agent-new-chat" id="agent-new-chat" type="button">New Chat</button>
+          <button class="agent-close" id="agent-close" aria-label="Close AI agent">x</button>
+        </div>
+      </div>
+
+      <div class="agent-intro compact">
+        <strong>Open-topic helper</strong>
+        <p>For course-note answers with citations, use Ask Assistant.</p>
+      </div>
+
+      <label class="agent-model-label">AI model
+        <select id="agent-model">
+          <option value="nvidia/nemotron-3-nano-30b-a3b:free">NVIDIA Nemotron 3 Nano 30B Free</option>
+        </select>
+      </label>
+
+      <div class="quick-prompts compact-prompts" aria-label="Example prompts">
+        <button data-agent-prompt="Explain machine learning in simple words">Explain ML</button>
+        <button data-agent-prompt="Give me a 7 day plan to learn Python basics">Python plan</button>
+        <button data-agent-prompt="Help me prepare for a software engineering interview">Interview prep</button>
+        <button data-agent-prompt="Summarize the French Revolution for a beginner">History</button>
+      </div>
+
+      <div class="agent-chat" id="agent-chat">
+        <div class="message assistant">
+          <p>Hi, I am your general AI agent. Ask me anything from any topic.</p>
+        </div>
+      </div>
+
+      <form class="chat-input agent-input" id="agent-form">
+        <input aria-label="Ask the AI agent" id="agent-question" placeholder="Ask any general question..." />
+        <button type="submit">Ask</button>
+      </form>
+    </aside>
+
+    <script src="app.js"></script>
+  </body>
+</html>
