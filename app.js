@@ -96,15 +96,28 @@ const flashGenerate = document.querySelector("#flash-generate");
 const flashcardFeedback = document.querySelector("#flashcard-feedback");
 const regeneratePlan = document.querySelector("#regenerate-plan");
 const plannerGrid = document.querySelector("#planner-grid");
+const notesTopic = document.querySelector("#notes-topic");
+const notesStyle = document.querySelector("#notes-style");
+const generateNotes = document.querySelector("#generate-notes");
+const courseWorkspaceTitle = document.querySelector("#course-workspace-title");
+const courseWorkspaceAsk = document.querySelector("#course-workspace-ask");
+const courseUnitList = document.querySelector("#course-unit-list");
+const moduleNotesUnit = document.querySelector("#module-notes-unit");
+const moduleNotesTopic = document.querySelector("#module-notes-topic");
+const generateModuleNotes = document.querySelector("#generate-module-notes");
+const downloadModuleNotes = document.querySelector("#download-module-notes");
+const moduleNotesOutput = document.querySelector("#module-notes-output");
 let clerkClient = null;
 let selectedProvider = "google";
 let currentQuizIndex = 0;
 let selectedQuizAnswers = {};
 let currentFlashcardIndex = 0;
+let latestPrintableNotes = null;
+let latestModulePrintableNotes = null;
 
 const courseProfiles = {
   DBMS: {
-    unit: "Unit 2: Normalization",
+    unit: "Unit 4: Normalization and Functional Dependencies",
     exam: "14 days left",
     weak: "Dependencies, 3NF",
     hero: "Keep DBMS revision moving with cited answers and focused practice.",
@@ -117,9 +130,10 @@ const courseProfiles = {
     needsTime: "Maths",
     tasks: ["Read DBMS Unit 2 summary", "Practice normalization MCQs", "Review difficult flashcards", "Analyze 2024 DBMS paper questions"],
     weakTopics: ["Normalization", "Transactions", "SQL joins", "Indexing"],
+    units: ["Unit 1: DBMS Concepts and Architecture", "Unit 2: ER Model and Relational Model", "Unit 3: SQL Queries and Constraints", "Unit 4: Normalization and Functional Dependencies", "Unit 5: Transactions and Concurrency Control", "Unit 6: Indexing, Hashing, and Query Processing", "Unit 7: Recovery, Security, and Distributed Databases"],
   },
   "Operating Systems": {
-    unit: "Unit 4: Deadlocks",
+    unit: "Unit 5: Deadlocks and Resource Allocation",
     exam: "19 days left",
     weak: "Deadlocks, Scheduling",
     hero: "Keep OS revision moving with process, memory, and deadlock practice.",
@@ -132,9 +146,10 @@ const courseProfiles = {
     needsTime: "DSA",
     tasks: ["Read OS deadlock notes", "Practice CPU scheduling sums", "Review memory management flashcards", "Analyze OS repeated paper questions"],
     weakTopics: ["Deadlocks", "CPU scheduling", "Paging", "Semaphores"],
+    units: ["Unit 1: OS Introduction and System Calls", "Unit 2: Processes, Threads, and IPC", "Unit 3: CPU Scheduling Algorithms", "Unit 4: Synchronization and Semaphores", "Unit 5: Deadlocks and Resource Allocation", "Unit 6: Memory Management and Paging", "Unit 7: File Systems, I/O, and Protection"],
   },
   DSA: {
-    unit: "Unit 3: Trees and Graphs",
+    unit: "Unit 4: Trees, BST, Heaps, and Tries",
     exam: "23 days left",
     weak: "Recursion trees, Graph traversal",
     hero: "Keep DSA practice moving with solved patterns and spaced revision.",
@@ -147,9 +162,10 @@ const courseProfiles = {
     needsTime: "Operating Systems",
     tasks: ["Solve recursion tree examples", "Practice BFS and DFS questions", "Review complexity flashcards", "Analyze 2024 DSA graph problems"],
     weakTopics: ["Recursion trees", "Graph traversal", "Dynamic programming", "Time complexity"],
+    units: ["Unit 1: Algorithm Analysis and Complexity", "Unit 2: Arrays, Strings, Stacks, and Queues", "Unit 3: Linked Lists and Recursion", "Unit 4: Trees, BST, Heaps, and Tries", "Unit 5: Graphs, BFS, DFS, and Shortest Paths", "Unit 6: Sorting, Searching, and Hashing", "Unit 7: Dynamic Programming and Greedy Algorithms"],
   },
   Maths: {
-    unit: "Unit 5: Eigen Values",
+    unit: "Unit 2: Eigen Values and Eigen Vectors",
     exam: "11 days left",
     weak: "Eigen values, Matrices",
     hero: "Keep Maths revision moving with formulas, examples, and timed practice.",
@@ -162,6 +178,7 @@ const courseProfiles = {
     needsTime: "DBMS",
     tasks: ["Revise eigen value formulas", "Solve matrix practice set", "Review theorem flashcards", "Analyze repeated Maths questions"],
     weakTopics: ["Eigen values", "Matrices", "Differentiation", "Probability"],
+    units: ["Unit 1: Matrices and Determinants", "Unit 2: Eigen Values and Eigen Vectors", "Unit 3: Differential Calculus", "Unit 4: Integral Calculus", "Unit 5: Differential Equations", "Unit 6: Probability and Statistics", "Unit 7: Laplace Transforms and Numerical Methods"],
   },
   "All Courses": {
     unit: "Mixed revision",
@@ -177,6 +194,7 @@ const courseProfiles = {
     needsTime: "DSA",
     tasks: ["Review one weak topic from each course", "Take a mixed 15 question quiz", "Revise due flashcards", "Check repeated questions from past papers"],
     weakTopics: ["Recursion trees", "Deadlocks", "Eigen values", "Normalization"],
+    units: ["Unit 1: DBMS Core Revision", "Unit 2: Operating Systems Core Revision", "Unit 3: DSA Core Revision", "Unit 4: Maths Core Revision", "Unit 5: Previous Paper Practice", "Unit 6: Weak Topic Repair", "Unit 7: Final Mock Test and Flashcards"],
   },
 };
 
@@ -353,6 +371,91 @@ function parseAiJson(text) {
   throw new Error("AI did not return valid JSON.");
 }
 
+function buildNotesVisuals(title) {
+  const safeTitle = escapeHtml(title);
+  return `
+    <section class="notes-diagrams" aria-label="Study diagrams">
+      <div class="notes-diagram-card">
+        <h4>Flow chart</h4>
+        <div class="flow-chart">
+          <span>Understand ${safeTitle}</span>
+          <i></i>
+          <span>Identify key terms</span>
+          <i></i>
+          <span>Apply example</span>
+          <i></i>
+          <span>Write exam answer</span>
+        </div>
+      </div>
+      <div class="notes-diagram-card">
+        <h4>Venn diagram</h4>
+        <div class="venn-diagram" aria-label="Concept, example, and exam use overlap">
+          <div class="venn-circle venn-left"><strong>Concept</strong></div>
+          <div class="venn-circle venn-right"><strong>Examples</strong></div>
+          <div class="venn-circle venn-bottom"><strong>Exam Use</strong></div>
+          <span class="venn-center">Mastery</span>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderNotesPackage({ title, subtitle, body, citation, includeDownload = true }) {
+  return `
+    <article class="printable-notes">
+      <div class="notes-header">
+        <p class="eyebrow">${escapeHtml(subtitle)}</p>
+        <h3>${escapeHtml(title)}</h3>
+      </div>
+      <div class="notes-body">${formatAnswer(body)}</div>
+      ${buildNotesVisuals(title)}
+      <div class="citations"><button>${escapeHtml(citation)}</button></div>
+    </article>
+    ${includeDownload ? '<button class="ghost-button notes-pdf-button" data-download-notes type="button">Download PDF</button>' : ""}
+  `;
+}
+
+function downloadNotesAsPdf(notesHtml, fileName = "ai-generated-notes") {
+  const printWindow = window.open("", "_blank", "width=900,height=720");
+  if (!printWindow) {
+    alert("Please allow popups to download the PDF.");
+    return;
+  }
+  printWindow.document.write(`
+    <!doctype html>
+    <html>
+      <head>
+        <title>${escapeHtml(fileName)}</title>
+        <style>
+          body { margin: 0; padding: 28px; font-family: Arial, sans-serif; color: #0f172a; line-height: 1.55; }
+          h3 { margin: 0 0 12px; font-size: 26px; }
+          h4 { margin: 0 0 12px; font-size: 16px; }
+          p { margin: 0 0 12px; }
+          .eyebrow { color: #0f766e; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+          .notes-diagrams { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; break-inside: avoid; }
+          .notes-diagram-card { border: 1px solid #cbd5e1; border-radius: 10px; padding: 16px; }
+          .flow-chart { display: grid; gap: 8px; text-align: center; }
+          .flow-chart span { border: 1px solid #99f6e4; background: #f0fdfa; border-radius: 8px; padding: 10px; font-weight: 700; }
+          .flow-chart i { width: 2px; height: 18px; background: #0f766e; justify-self: center; position: relative; }
+          .venn-diagram { position: relative; min-height: 220px; }
+          .venn-circle { position: absolute; width: 132px; height: 132px; border-radius: 50%; display: grid; place-items: center; text-align: center; font-weight: 800; border: 2px solid #0f766e; background: rgba(15,118,110,.14); }
+          .venn-left { left: 38px; top: 20px; }
+          .venn-right { right: 38px; top: 20px; background: rgba(245,158,11,.18); border-color: #d97706; }
+          .venn-bottom { left: calc(50% - 66px); top: 78px; background: rgba(22,163,74,.16); border-color: #16a34a; }
+          .venn-center { position: absolute; left: 50%; top: 94px; transform: translateX(-50%); font-weight: 900; background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 6px 10px; }
+          .citations button { border: 0; border-radius: 999px; padding: 8px 12px; font-weight: 800; }
+          .notes-pdf-button { display: none; }
+          @media print { body { padding: 18mm; } }
+        </style>
+      </head>
+      <body>${notesHtml}</body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => printWindow.print(), 250);
+}
+
 function buildFallbackQuiz(courseName) {
   const base = quizBank[courseName] || quizBank.DBMS;
   return Array.from({ length: 10 }, (_, index) => {
@@ -401,6 +504,86 @@ async function generateAiSummary() {
     generateSummary.disabled = false;
     generateSummary.textContent = "Generate Summary";
   }
+}
+
+async function generateAiNotes() {
+  const topic = notesTopic.value.trim();
+  const courseName = courseSelect.value;
+  if (!topic) {
+    summaryPreview.innerHTML = "<h3>Generated Notes</h3><p>Please enter a topic first.</p>";
+    notesTopic.focus();
+    return;
+  }
+
+  generateNotes.disabled = true;
+  generateNotes.textContent = "Generating...";
+  summaryPreview.innerHTML = "<h3>Generated Notes</h3><p>AI is preparing your notes...</p>";
+
+  try {
+    const prompt = `Generate university study notes on this topic: "${topic}". Course context: ${courseName}. Style: ${notesStyle.value}. Include definition, key points, example, exam answer structure, common mistakes, and quick revision bullets. Also describe what should appear in a simple flow chart and Venn diagram for the topic. If the topic is outside the course, still explain it clearly as general notes.`;
+    const answer = await callAi(prompt);
+    latestPrintableNotes = renderNotesPackage({
+      title: topic,
+      subtitle: `${courseName} - ${notesStyle.value}`,
+      body: answer,
+      citation: `${topic} - AI generated notes with diagrams`,
+      includeDownload: false,
+    });
+    summaryPreview.innerHTML = `<h3>Generated Notes</h3>${latestPrintableNotes}<button class="ghost-button notes-pdf-button" data-download-notes type="button">Download PDF</button>`;
+  } catch (error) {
+    summaryPreview.innerHTML = `<h3>Generated Notes</h3>${formatAnswer(error.message)}`;
+  } finally {
+    generateNotes.disabled = false;
+    generateNotes.textContent = "Generate Notes";
+  }
+}
+
+async function generateSelectedModuleNotes() {
+  const courseName = courseSelect.value;
+  const selectedModule = moduleNotesUnit.value;
+  const extraTopic = moduleNotesTopic.value.trim();
+  const target = extraTopic ? `${selectedModule}: ${extraTopic}` : selectedModule;
+
+  generateModuleNotes.disabled = true;
+  generateModuleNotes.textContent = "Generating...";
+  moduleNotesOutput.classList.remove("is-hidden");
+  moduleNotesOutput.innerHTML = "<p>AI is generating module notes...</p>";
+
+  try {
+    const prompt = `Generate complete university notes for ${courseName}. Module: ${target}. Include definition, syllabus-style explanation, key points, formulas/algorithms if relevant, one example, exam answer format, common mistakes, and 8 quick revision bullets. Also describe a useful flow chart and Venn diagram for this module. Keep it clear for students.`;
+    const answer = await callAi(prompt);
+    latestModulePrintableNotes = renderNotesPackage({
+      title: target,
+      subtitle: courseName,
+      body: answer,
+      citation: `${courseName} - ${target} - AI generated module notes`,
+      includeDownload: false,
+    });
+    moduleNotesOutput.innerHTML = latestModulePrintableNotes;
+    downloadModuleNotes.classList.remove("is-hidden");
+  } catch (error) {
+    moduleNotesOutput.innerHTML = formatAnswer(`${error.message}\n\nTry another AI model from the AI popup if the selected free model is busy.`);
+  } finally {
+    generateModuleNotes.disabled = false;
+    generateModuleNotes.textContent = "Generate Notes";
+  }
+}
+
+function renderUnitSelectors(profile, selectedUnit = profile.unit) {
+  const unitOptions = profile.units.map((unit) => `<option>${escapeHtml(unit)}</option>`).join("");
+  contextUnit.innerHTML = unitOptions;
+  moduleNotesUnit.innerHTML = unitOptions;
+  contextUnit.value = profile.units.includes(selectedUnit) ? selectedUnit : profile.unit;
+  moduleNotesUnit.value = contextUnit.value;
+}
+
+function syncSelectedModule(unit) {
+  contextUnit.value = unit;
+  moduleNotesUnit.value = unit;
+  moduleNotesOutput.classList.add("is-hidden");
+  moduleNotesOutput.innerHTML = "";
+  downloadModuleNotes.classList.add("is-hidden");
+  latestModulePrintableNotes = null;
 }
 
 async function generateAiQuiz() {
@@ -550,8 +733,8 @@ async function regenerateStudyPlan() {
 
 function updateCourseContext(courseName = courseSelect?.value || "DBMS") {
   const profile = courseProfiles[courseName] || courseProfiles.DBMS;
-  contextCourse.textContent = courseName;
-  contextUnit.textContent = profile.unit;
+  courseSelect.value = courseName;
+  contextCourse.value = courseName;
   contextExam.textContent = profile.exam;
   contextWeak.textContent = profile.weak;
   dashboardHeroTitle.textContent = profile.hero;
@@ -566,6 +749,14 @@ function updateCourseContext(courseName = courseSelect?.value || "DBMS") {
     .map((task, index) => `<label><input type="checkbox" ${index === 0 ? "checked" : ""} /> ${task}</label>`)
     .join("");
   weakTopicList.innerHTML = profile.weakTopics.map((topic) => `<span>${topic}</span>`).join("");
+  courseWorkspaceTitle.textContent = courseName;
+  courseWorkspaceAsk.textContent = `Ask from ${courseName}`;
+  courseUnitList.innerHTML = profile.units.map((unit) => `<span>${escapeHtml(unit)}</span>`).join("");
+  renderUnitSelectors(profile);
+  moduleNotesOutput.classList.add("is-hidden");
+  moduleNotesOutput.innerHTML = "";
+  downloadModuleNotes.classList.add("is-hidden");
+  latestModulePrintableNotes = null;
 
   if (uploadCourse && Array.from(uploadCourse.options).some((option) => option.value === courseName)) {
     uploadCourse.value = courseName;
@@ -1026,6 +1217,9 @@ agentLauncher.addEventListener("click", () => toggleAgent());
 agentClose.addEventListener("click", () => toggleAgent(false));
 agentNewChat.addEventListener("click", startNewAgentChat);
 courseSelect.addEventListener("change", () => updateCourseContext());
+contextCourse.addEventListener("change", () => updateCourseContext(contextCourse.value));
+contextUnit.addEventListener("change", () => syncSelectedModule(contextUnit.value));
+moduleNotesUnit.addEventListener("change", () => syncSelectedModule(moduleNotesUnit.value));
 quizOptions.addEventListener("change", () => {
   selectedQuizAnswers[currentQuizIndex] = document.querySelector('input[name="quiz-option"]:checked')?.value;
 });
@@ -1036,6 +1230,16 @@ nextQuizQuestion.addEventListener("click", () => {
 });
 submitQuiz.addEventListener("click", submitCurrentQuiz);
 generateSummary.addEventListener("click", generateAiSummary);
+generateNotes.addEventListener("click", generateAiNotes);
+generateModuleNotes.addEventListener("click", generateSelectedModuleNotes);
+downloadModuleNotes.addEventListener("click", () => {
+  if (latestModulePrintableNotes) downloadNotesAsPdf(latestModulePrintableNotes, "module-notes");
+});
+summaryPreview.addEventListener("click", (event) => {
+  if (event.target.matches("[data-download-notes]") && latestPrintableNotes) {
+    downloadNotesAsPdf(latestPrintableNotes, "ai-generated-notes");
+  }
+});
 createAiQuiz.addEventListener("click", generateAiQuiz);
 generateQuizFlashcards.addEventListener("click", () => {
   generateAiFlashcards();

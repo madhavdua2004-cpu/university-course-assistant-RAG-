@@ -186,11 +186,28 @@
           </div>
         </header>
 
-        <div class="context-strip" aria-label="Current study context">
-          <div><span>Course</span><strong id="context-course">DBMS</strong></div>
-          <div><span>Unit</span><strong id="context-unit">Unit 2: Normalization</strong></div>
-          <div><span>Exam</span><strong id="context-exam">14 days left</strong></div>
-          <div><span>Weak focus</span><strong id="context-weak">Dependencies, 3NF</strong></div>
+        <div class="context-and-notes">
+          <div class="context-strip" aria-label="Current study context">
+            <div><span>Course</span><select id="context-course" class="context-select" aria-label="Change course"><option>DBMS</option><option>Operating Systems</option><option>DSA</option><option>Maths</option><option>All Courses</option></select></div>
+            <div><span>Unit</span><select id="context-unit" class="context-select" aria-label="Change unit"></select></div>
+            <div><span>Exam</span><strong id="context-exam">14 days left</strong></div>
+            <div><span>Weak focus</span><strong id="context-weak">Dependencies, 3NF</strong></div>
+          </div>
+          <aside class="panel module-notes-panel" aria-label="AI module notes generator">
+            <div>
+              <p class="eyebrow">AI Module Notes</p>
+              <h3>Generate notes</h3>
+            </div>
+            <label>Module
+              <select id="module-notes-unit"></select>
+            </label>
+            <label>Extra topic
+              <input id="module-notes-topic" placeholder="Optional: specific topic inside module" />
+            </label>
+            <button class="primary-action" id="generate-module-notes" type="button">Generate Notes</button>
+            <button class="ghost-button is-hidden" id="download-module-notes" type="button">Download PDF</button>
+            <div class="module-notes-output is-hidden" id="module-notes-output" aria-live="polite"></div>
+          </aside>
         </div>
 
         <section class="view active" id="dashboard">
@@ -391,9 +408,9 @@
             <div class="panel-header">
               <div>
                 <p class="eyebrow">Course workspace</p>
-                <h3>DBMS</h3>
+                <h3 id="course-workspace-title">DBMS</h3>
               </div>
-              <button class="ghost-button" data-view-jump="assistant">Ask from DBMS</button>
+              <button class="ghost-button" id="course-workspace-ask" data-view-jump="assistant">Ask from DBMS</button>
             </div>
             <div class="tab-row" role="tablist" aria-label="Course sections">
               <button class="active">Overview</button>
@@ -406,7 +423,7 @@
             <div class="course-workspace">
               <div>
                 <h4>Important Units</h4>
-                <div class="topic-list">
+                <div class="topic-list unit-list" id="course-unit-list">
                   <span>Unit 2: Normalization</span>
                   <span>Unit 4: Transactions</span>
                   <span>SQL joins</span>
@@ -576,6 +593,21 @@
                 <select id="summary-format"><option>10 bullet points</option><option>Short notes</option><option>Exam revision</option></select>
               </label>
               <button class="primary-action" id="generate-summary" type="button">Generate Summary</button>
+            </section>
+            <section class="panel">
+              <h2>Notes Generator</h2>
+              <label>Any topic
+                <input id="notes-topic" placeholder="Example: semaphore, binary search tree, eigen values" />
+              </label>
+              <label>Notes style
+                <select id="notes-style">
+                  <option>Exam notes</option>
+                  <option>Simple explanation</option>
+                  <option>Step-by-step</option>
+                  <option>Interview notes</option>
+                </select>
+              </label>
+              <button class="primary-action" id="generate-notes" type="button">Generate Notes</button>
             </section>
             <section class="panel" id="summary-preview">
               <h3>Preview</h3>

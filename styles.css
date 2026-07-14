@@ -502,11 +502,18 @@ p {
   margin-bottom: 24px;
 }
 
+.context-and-notes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 14px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
 .context-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
-  margin-bottom: 18px;
 }
 
 .context-strip div {
@@ -527,6 +534,142 @@ p {
   display: block;
   margin-top: 4px;
   font-size: 14px;
+}
+
+.context-select {
+  width: 100%;
+  min-height: 30px;
+  margin-top: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  outline: none;
+}
+
+.context-select:focus-visible {
+  border-radius: 6px;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+}
+
+.module-notes-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.module-notes-panel h3 {
+  margin: 0;
+}
+
+.module-notes-output {
+  max-height: 260px;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid rgba(12, 124, 112, 0.22);
+  border-radius: 8px;
+  background: var(--soft);
+  line-height: 1.55;
+}
+
+.notes-header h3 {
+  margin: 0 0 10px;
+}
+
+.notes-body {
+  margin-bottom: 16px;
+}
+
+.notes-diagrams {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.notes-diagram-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: white;
+}
+
+.notes-diagram-card h4 {
+  margin: 0 0 12px;
+}
+
+.flow-chart {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.flow-chart span {
+  padding: 10px;
+  border: 1px solid #99f6e4;
+  border-radius: 8px;
+  background: #f0fdfa;
+  font-weight: 800;
+}
+
+.flow-chart i {
+  width: 2px;
+  height: 16px;
+  justify-self: center;
+  background: var(--primary);
+}
+
+.venn-diagram {
+  position: relative;
+  min-height: 210px;
+}
+
+.venn-circle {
+  position: absolute;
+  width: 126px;
+  height: 126px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  background: rgba(15, 118, 110, 0.14);
+  text-align: center;
+}
+
+.venn-left {
+  left: 20px;
+  top: 18px;
+}
+
+.venn-right {
+  right: 20px;
+  top: 18px;
+  border-color: var(--accent);
+  background: rgba(245, 158, 11, 0.18);
+}
+
+.venn-bottom {
+  left: calc(50% - 63px);
+  top: 76px;
+  border-color: var(--success);
+  background: rgba(22, 163, 74, 0.16);
+}
+
+.venn-center {
+  position: absolute;
+  left: 50%;
+  top: 92px;
+  transform: translateX(-50%);
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: white;
+  font-weight: 900;
+}
+
+.notes-pdf-button {
+  margin-top: 12px;
 }
 
 .topbar h1,
@@ -1301,6 +1444,16 @@ mark {
   border-radius: 8px;
 }
 
+.unit-list {
+  align-items: stretch;
+}
+
+.unit-list span {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 .quiz-options,
 .quiz-actions {
   display: grid;
@@ -1532,6 +1685,7 @@ mark {
   .course-grid,
   .assistant-layout,
   .learning-graph,
+  .context-and-notes,
   .course-workspace {
     grid-template-columns: 1fr;
   }
@@ -1627,6 +1781,7 @@ mark {
   .course-grid,
   .planner-grid,
   .setup-grid,
+  .context-and-notes,
   .context-strip,
   .pipeline-grid,
   .info-grid,
@@ -1635,6 +1790,10 @@ mark {
   .course-workspace {
     grid-template-columns: 1fr;
     display: grid;
+  }
+
+  .notes-diagrams {
+    grid-template-columns: 1fr;
   }
 
   .graph-bars {
