@@ -1,4 +1,4 @@
-# University Course Assistant UI
+# University Course Assistant RAG
 
 This is a static frontend prototype for a citation-first University Course Assistant RAG app.
 
